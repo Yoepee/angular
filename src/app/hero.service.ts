@@ -15,7 +15,14 @@ import { catchError, map, tap } from 'rxjs/operators';
 })
 export class HeroService {
   private heroesUrl = 'api/heroes';
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    refreshtoken : localStorage.getItem("token")
+  };
 
+   /**
+ * 전체조회 api
+ */
   getHeroes(): Observable<Hero[]> {
     // const heroes = of(HEROES);
     // this.messageService.add("HeroService: fetched heroes")
@@ -26,6 +33,9 @@ export class HeroService {
         catchError(this.handleError<Hero[]>('getHeroes', []))
       )
   }
+   /**
+ * 단독조회 api
+ */
   getHero(id: number): Observable<Hero> {
     // const hero = HEROES.find(h => h.id === id)!;
     // this.messageService.add("HeroService: fetched heroes")
@@ -38,6 +48,9 @@ export class HeroService {
     )
   }
 
+  /**
+ * 정보갱신 api
+ */
   updateHero(hero: Hero): Observable<any> {
     return this.http.put(this.heroesUrl, hero, this.httpOptions)
     .pipe(
@@ -46,6 +59,9 @@ export class HeroService {
     );
   }
 
+  /**
+ * 정보추가 api
+ */
   /** POST: add a new hero to ther server */
   addHero(hero: Hero): Observable<Hero> {
     return this.http.post<Hero>(this.heroesUrl, hero, this.httpOptions)
@@ -55,6 +71,9 @@ export class HeroService {
       );
   }
 
+  /**
+ * 정보 삭제 api
+ */
   deleteHero(id: number): Observable<Hero> {
     const url = `${this.heroesUrl}/${id}`;
 
@@ -78,9 +97,6 @@ export class HeroService {
     )
   }
 
-  httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  };
 
   // getHeroes():Hero[]{
   //   return HEROES;
